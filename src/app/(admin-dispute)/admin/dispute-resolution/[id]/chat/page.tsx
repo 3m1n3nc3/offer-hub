@@ -20,7 +20,7 @@ const types: { [key in NonNullable<DisputeRow['status']>]: string } = {
 export default function DisputeChat() {
   const { activeConversation, messages, handleSendMessage } = useMessages();
 
-  const { disputes } = useMockDisputes(1);
+  const { disputes, loading } = useMockDisputes(1);
   const dispute = disputes[0];
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -34,7 +34,7 @@ export default function DisputeChat() {
   const closeDisputeButton = (
     <Button
       className="py-5 text-white rounded-full bg-secondary-500"
-      disabled={dispute.status === 'resolved'}
+      disabled={dispute?.status === 'resolved' || loading || !dispute}
       onClick={handleOpenModal}
     >
       <MdGavel /> Close conflict
@@ -52,7 +52,7 @@ export default function DisputeChat() {
         </Link>
 
         <div className="px-4 py-1 text-white rounded-full bg-secondary-500">
-          {types[dispute.status!]}
+          {loading || !dispute ? 'Loading...' : types[dispute.status!]}
         </div>
       </div>
       <div className="flex h-full w-full lg:w-[714px] mx-auto bg-white rounded-lg">
@@ -60,12 +60,14 @@ export default function DisputeChat() {
           activeConversation={activeConversation}
           messages={messages}
           dispute={dispute}
+          loading={loading}
           onSendMessage={handleSendMessage}
           chatHeaderItem={closeDisputeButton}
         />
         <CloseConflictModal
           open={modalOpen}
           dispute={dispute}
+          loading={loading}
           onClose={handleCloseModal}
           onConfirm={handleConfirm}
         />

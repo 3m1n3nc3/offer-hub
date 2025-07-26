@@ -8,16 +8,18 @@ import Icon from '../../../public/Icon.svg';
 import Image from 'next/image';
 import { Input } from '@/components/ui/input';
 import type { MessagesMainProps } from '@/types';
+import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 import maskGroup from '../../../public/maskGroup.svg';
 import { useMessages } from '@/hooks/use-message';
 
 export function MessagesMain({
-  activeConversation,
+  loading,
   dispute,
   messages,
   onSendMessage,
   chatHeaderItem,
+  activeConversation,
 }: MessagesMainProps) {
   const {
     newMessage,
@@ -28,12 +30,17 @@ export function MessagesMain({
     handleKeyPress,
   } = useMessages(onSendMessage);
 
-  if (!activeConversation) {
+  if (!activeConversation || loading) {
     return (
       <div className="flex items-center justify-center flex-1">
-        <p className="text-gray-500">
-          Select a conversation to start messaging
-        </p>
+        <Progress indeterminate={loading} className="!h-2" />
+        {!loading ? (
+          <p className="text-gray-500">
+            Select a conversation to start messaging
+          </p>
+        ) : (
+          ''
+        )}
       </div>
     );
   }

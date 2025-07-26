@@ -25,6 +25,7 @@ export interface Conversation {
 }
 
 export interface MessagesMainProps {
+  loading?: boolean
   dispute?: DisputeRow
   activeConversation?: Conversation
   messages: Message[]
