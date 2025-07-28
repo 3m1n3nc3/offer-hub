@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 import { Button } from '@/components/ui/button';
 import CloseConflictModal from '@/components/dispute-resolution/close-conflict-modal';
 import { DisputeRow } from '@/types';
@@ -9,7 +11,6 @@ import { MdGavel } from 'react-icons/md';
 import { MessagesMain } from '@/components/messages/messages-main';
 import { useMessages } from '@/hooks/useMessages';
 import { useMockDisputes } from '@/data/generic-mock-data';
-import { useState } from 'react';
 
 const types: { [key in NonNullable<DisputeRow['status']>]: string } = {
   active: 'Active Dispute',
@@ -21,15 +22,18 @@ export default function DisputeChat() {
   const { activeConversation, messages, handleSendMessage } = useMessages();
 
   const { disputes, loading } = useMockDisputes(1);
-  const dispute = disputes[0];
-
   const [modalOpen, setModalOpen] = useState(false);
+  const [dispute, setDispute] = useState<DisputeRow>();
 
   const handleOpenModal = () => setModalOpen(true);
   const handleCloseModal = () => setModalOpen(false);
   const handleConfirm = () => {
     setModalOpen(false);
   };
+
+  useEffect(() => {
+    setDispute(disputes[0]);
+  }, [disputes]);
 
   const closeDisputeButton = (
     <Button
@@ -70,6 +74,7 @@ export default function DisputeChat() {
           loading={loading}
           onClose={handleCloseModal}
           onConfirm={handleConfirm}
+          setDispute={setDispute}
         />
       </div>
     </>

@@ -22,12 +22,14 @@ export default function CloseConflictModal({
   dispute,
   loading,
   onConfirm,
+  setDispute,
 }: {
   open: boolean;
   dispute: DisputeRow;
   onClose: () => void;
   loading?: boolean;
   onConfirm: (recipient: User, message: string) => void;
+  setDispute?: (dispute: DisputeRow) => void;
 }) {
   const [saving, setSaving] = useState(false);
   const [recipient, setRecipient] = useState<User>();
@@ -44,6 +46,7 @@ export default function CloseConflictModal({
 
     setSaving(false);
     onConfirm(recipient, message);
+    setDispute?.(data);
 
     toast.success(
       `Conflict "${data.ticket}" has been closed and payment released to ${recipient.name}`,
